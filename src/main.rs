@@ -1,6 +1,7 @@
 use std::env;
 use std::fs;
 use std::process;
+use std::error::Error;
 
 fn main() {
     // store the collected values produced by the iterator into a vector
@@ -14,10 +15,10 @@ fn main() {
     println!("Searching for {}", config.query);
     println!("In file {}", config.file_path);
 
-    let contents = fs::read_to_string(config.file_path)
-        .expect("Should have been able to read the file");
-
-    println!("With text:\n{contents}");
+    if let Err(e) = run(config) {
+        println!("Application error: {e}");
+        process::exit(1);
+    }
 }
 
 struct Config {
@@ -37,4 +38,13 @@ impl Config {
     }
 }
 
+// the defined return type int the signature for the error
+// implements the Error trait and allows returning different
+// types of error (`dyn` means dynamic)
+fn run(config: Config) -> Result<(), Box<dyn Error>> {
+    let contents = fs::read_to_string(config.file_path)?;
 
+    println!("With text:\n{contents}");
+
+    Ok(())
+}
