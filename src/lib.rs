@@ -16,11 +16,7 @@ impl Config {
         let query = args[1].clone();
         let file_path = args[2].clone();
 
-        // IGNORE_CASE environment variable is passed to the fn env:var
-        // which returns a Result that is converted to bool by is_ok().
-        // We don't care about `unwrap` or `expect`, we just need to check
-        // if the env var is set or not.
-        let ignore_case = env::var("IGNORE_CASE").is_ok();
+        let ignore_case = determine_case_sensetivity(args);
 
         Ok(Config { 
             query,
@@ -74,6 +70,24 @@ pub fn search_case_insensitive<'a>(query: &str, contents: &'a str) -> Vec<&'a st
     }
 
     results
+}
+
+pub fn determine_case_sensetivity(args: &[String]) -> bool {
+    // check for command line argument first (higher precedence)
+    for arg in args.iter().skip(3) {
+        match arg.as_str() {
+            "-i" => return true,
+            "-s" => return false,
+            _ => continue,
+        }
+    }
+
+    // IGNORE_CASE environment variable is passed to the fn env:var
+    // which returns a Result that is converted to bool by is_ok().
+    // We don't care about `unwrap` or `expect`, we just need to check
+    // if the env var is set or not.
+    env::var("IGNORE_CASE").is_ok()
+
 }
 
 #[cfg(test)]
