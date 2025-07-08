@@ -119,4 +119,16 @@ Trust me.";
             search_case_insensitive(query, contents)
         );
     }
+
+    #[test]
+    fn control_sensetivity() {
+        let args: Vec<String> = vec![
+            String::from("taregt/debug/minigrep"),
+            String::from("to"),
+            String::from("poem.txt"),
+            String::from("-s")];
+        let ignore_case = true;
+
+        assert_ne!(ignore_case, determine_case_sensetivity(&args))
+    }
 }
