@@ -16,7 +16,7 @@ impl Config {
         let query = args[1].clone();
         let file_path = args[2].clone();
 
-        let ignore_case = determine_case_sensetivity(args);
+        let ignore_case = determine_case_sensitivity(args);
 
         Ok(Config { 
             query,
@@ -72,7 +72,7 @@ pub fn search_case_insensitive<'a>(query: &str, contents: &'a str) -> Vec<&'a st
     results
 }
 
-pub fn determine_case_sensetivity(args: &[String]) -> bool {
+pub fn determine_case_sensitivity(args: &[String]) -> bool {
     // check for command line argument first (higher precedence)
     for arg in args.iter().skip(3) {
         match arg.as_str() {
@@ -121,7 +121,7 @@ Trust me.";
     }
 
     #[test]
-    fn control_sensetivity() {
+    fn control_sensitivity() {
         let args: Vec<String> = vec![
             String::from("taregt/debug/minigrep"),
             String::from("to"),
@@ -129,6 +129,6 @@ Trust me.";
             String::from("-s")];
         let ignore_case = true;
 
-        assert_ne!(ignore_case, determine_case_sensetivity(&args))
+        assert_ne!(ignore_case, determine_case_sensitivity(&args))
     }
 }
